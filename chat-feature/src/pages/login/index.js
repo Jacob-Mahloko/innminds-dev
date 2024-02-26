@@ -2,24 +2,43 @@ import React from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, Card, Flex } from 'antd';
 import  './index.css';
+import { useStateContext } from '../../providers/authProvider';
+import { useActionContext } from '../../providers/authProvider';
+
+
 
 const cardStyle = {
     width: 1200,
     padding:10,
     margin:50,
     
-  };
-  const imgStyle = {
+};
+
+const imgStyle = {
     display: 'block',
     width: 700,
     height:500
-  };
+};
 
 const Login = () => {
+
   const onFinish = (values) => {
-    console.log('Received values of form: ', values);
+    const {username,password}=values;
+    
+    if(username==='jake'&&password=='pass'){
+      login(username);
+    }else{
+      console.log(username,password,'help me');
+    }
   };
+  
+  const status=useStateContext();
+  const {login,logout}=useActionContext();
+
+  console.log(status);
+  
   return (
+
     <div className='main-container'>
     <Card
     hoverable
@@ -109,4 +128,5 @@ const Login = () => {
   </div>
 );
 };
+
 export default Login;

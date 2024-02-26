@@ -1,11 +1,11 @@
-
+import React from 'react';
 import { Button, Result } from 'antd';
 
 export default function withAuthGuard(Component) {
-    console.log(Component,'component')
+    //status
     const isAuth=true;
     const content=isAuth?<Component/>:
-        <Result
+        <Result style={{margin:'10%'}}
         status="403"
         title="403"
         subTitle="Sorry, you are not authorized to access this page."
@@ -13,5 +13,5 @@ export default function withAuthGuard(Component) {
         />
     ;
 
-    return content;
+    return ()=>content;
 }
