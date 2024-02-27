@@ -1,7 +1,9 @@
-import React from 'react';
+import React,{useContext} from 'react';
+import { authStateContext } from '../../providers/authProvider/context';
 import { Button, Result } from 'antd';
 
-export default function withAuthGuard(Component) {
+
+export default function WithAuthGuard(Component) {
     //status
     const isAuth=true;
     const content=isAuth?<Component/>:

@@ -1,10 +1,10 @@
 import React from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Form, Input, Card, Flex } from 'antd';
+import { Button, Checkbox, Form, Input, Card, message,Flex } from 'antd';
 import  './index.css';
 import { useStateContext } from '../../providers/authProvider';
 import { useActionContext } from '../../providers/authProvider';
-
+import { useNavigate } from "react-router-dom";
 
 
 const cardStyle = {
@@ -20,26 +20,52 @@ const imgStyle = {
     height:500
 };
 
-const Login = () => {
+const ButtonStyle={
 
+}
+
+
+
+const Login = () => {
+  const [messageApi, contextHolder] = message.useMessage();
+  const success = (username='hello') => {
+    messageApi.open({
+      type: 'success',
+      content: `Welcome, ${username}`,
+    });
+  };
+  const error = () => {
+    messageApi.open({
+      type: 'error',
+      content: 'Incorrect credentials',
+    });
+  };
+  
   const onFinish = (values) => {
     const {username,password}=values;
     
     if(username==='jake'&&password=='pass'){
       login(username);
+      console.log(success(username));
+      history('/Chat')
+      
     }else{
+      error();
       console.log(username,password,'help me');
     }
   };
   
-  const status=useStateContext();
+  
   const {login,logout}=useActionContext();
 
-  console.log(status);
+  const status=useStateContext();
+  const history=useNavigate('/Chat');
   
   return (
+    
 
     <div className='main-container'>
+      {contextHolder}
     <Card
     hoverable
     style={cardStyle}
@@ -111,7 +137,8 @@ const Login = () => {
       </Form.Item>
       
       <Form.Item>
-        <Button type="primary" htmlType="submit" className="login-form-button">
+        <Button style={ButtonStyle} type='primary' htmlType="submit" className="login-form-button" >
+
           Log in
         </Button>
       </Form.Item>

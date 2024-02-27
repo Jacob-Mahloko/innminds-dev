@@ -2,6 +2,8 @@ import Chat  from "./pages/chat";
 import Login from "./pages/login";
 import {BrowserRouter,Routes,Route} from 'react-router-dom';
 import NotFound from "./pages/notfound";
+import Profile from "./pages/profile";
+import Quiz from "./pages/quiz";
 
 const App=()=>{
   return (

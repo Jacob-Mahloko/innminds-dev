@@ -1,14 +1,19 @@
 import './index.css';
-import withAuthGuard from "../../component/unauth";
+import WithAuthGuard from "../../component/unauth";
 import React, { useState } from 'react';
-import { Avatar, Col, Divider, Drawer, List, Row , Button, Card, Flex, Typography} from 'antd';
+import { Avatar, Col, Divider, Drawer, List, Row , Button,Tabs, Card, Flex, Typography} from 'antd';
 import MessageBar from '../../component/messagesBar';
-import MenuButton from '../../component/menuButton';
+import Profile from '../profile';
+import GameButton from '../../component/gameButton';
+import PopUp from '../../component/popUp/quiz';
+import Trophy from '../../component/popUp/trophy';
 
 const cardStyle = {
   width: '100%',
-  height: '100vh'
+  height: '100vh',
+  justifyContent:'center'
 };
+
 const imgStyle = {
   width: '60%'
 };
@@ -19,30 +24,99 @@ const DescriptionItem = ({ title, content }) => (
     {content}
   </div>
 );
+
+const tabStyle={
+  position:'absolute',
+  bottom:20,
+  width:'100%',
+  marginLeft:'18%'
+}
+
+
+//Chat Component
 const Chat = () => {
+  
+  //drawer state opener
   const [open, setOpen] = useState(false);
+  //profile state opener
+  const [profileOpen,setProfileOpen]=useState(false);
+
+  //functions to manipulate state of drawer
   const showDrawer = () => {
     setOpen(true);
   };
   const onClose = () => {
     setOpen(false);
   };
+
+  //Navigation Tabs
   
+  const items = [
+    {
+      key: '1',
+      label: 'Chats',
+    },
+    {
+      key: '2',
+      label: 'Groups',
+    }
+  ];
+
+  const [ChatTabState,setTabState]=useState(true);
+
+  const onChange = (key) => {
+    console.log(key)
+    if(key==='1'){
+      setTabState(()=>true);
+    }else if(key='2'){
+      setTabState(()=>false);
+    }
+  };
   //cards in the drawer
   const { Meta } = Card;
+
+  //pop for the quiz
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+    const showModal = () => {
+      setIsModalOpen(true);
+    };
+    const handleOk = () => {
+      setIsModalOpen(false);
+    };
+    const handleCancel = () => {
+      setIsModalOpen(false);
+    };
+
+  //pop for showing leader board
+
+  const [trophyisModalOpen, setTrophyIsModalOpen] = useState(false);
+    const trophyshowModal = () => {
+      setTrophyIsModalOpen(true);
+    };
+    const trophyhandleOk = () => {
+      setTrophyIsModalOpen(false);
+    };
+    const trophyhandleCancel = () => {
+      setTrophyIsModalOpen(false);
+    };
+
   return (
      
   <div className="chat-container">
     <Card hoverable style={cardStyle} styles={{ body: { padding: 0, overflow: 'hidden' } }}>
       <Flex style={{width:'100%'}} >
-        <img
+        {(!open&&!profileOpen)&&<img
           alt="avatar"
           src="./side-chat.gif"
           style={imgStyle}
-        />
+        />}
+
+        {profileOpen&&<Profile profileOff={setProfileOpen}/>}
+
         <div className='list'>
         <List
-        dataSource={[
+        dataSource={(ChatTabState?[
           {
             id: 1,
             name: 'Israel',
@@ -51,7 +125,21 @@ const Chat = () => {
             id: 2,
             name: 'Tshepo',
           },
-        ]}
+        ]:[
+          {
+            id:1,
+            name:'Boxfusion dev Group'
+          },
+          {
+            id:2,
+            name:'Friends and Family'
+          },
+          {
+            id:2,
+            name:'Honours Group'
+          }
+        ])}
+
         bordered
         renderItem={(item) => (
           <List.Item
@@ -64,14 +152,24 @@ const Chat = () => {
           >
             <List.Item.Meta
               avatar={
-                <Avatar src="./profile.png" />
+                <Avatar src="./profile.jpg" />
               }
               //clicking on profile must take you some where
-              title={<a href="#">{item.name}</a>}
+              title={<a onClick={(e)=>{setProfileOpen(true)}}>{item.name}</a>}
               description="Coming soon..."
             />
           </List.Item>
         )}
+      />
+      {isModalOpen && <PopUp isModalOpen={isModalOpen} showModal={showModal} handleOk={handleOk} handleCancel={handleCancel}/>}
+      {trophyshowModal && <Trophy trophyisModalOpen={trophyisModalOpen} trophyhandleOk={trophyhandleOk} trophyhandleCancel={trophyhandleCancel}/>}
+      <GameButton showModal={showModal} trophyshowModal={trophyshowModal}/>
+      
+      <Tabs
+        defaultActiveKey='1'
+        items={items}
+        onChange={onChange}
+        style={tabStyle}
       />
         <Drawer width={'50%'} title="Israel" placement="left" closable={true} onClose={onClose} open={open} style={{backgroundColor:'gainsboro'}}>
         <Row>
@@ -80,7 +178,6 @@ const Chat = () => {
               style={{
                 width: 350,
                 marginTop: 20,
-
               }}
 
               > 
@@ -113,13 +210,13 @@ const Chat = () => {
         </Col>
         </Row>
         <MessageBar/>
-        {/* <MenuButton/> */}
       </Drawer>
       </div>
       </Flex>
     </Card>
+
   </div>
   );
 };
 
-export default withAuthGuard(Chat);
+export default WithAuthGuard(Chat);
