@@ -1,12 +1,15 @@
 import './index.css';
 import WithAuthGuard from "../../component/unauth";
-import React, { useState } from 'react';
-import { Avatar, Col, Divider, Drawer, List, Row , Button,Tabs, Card, Flex, Typography} from 'antd';
+import React, { useEffect, useState } from 'react';
+import { useSearch } from '../../providers/searchProvider';
+import { Avatar, Col, Divider, Drawer, List, Row , Button,Tabs, Card, Flex, Typography,AutoComplete} from 'antd';
 import MessageBar from '../../component/messagesBar';
 import Profile from '../profile';
 import GameButton from '../../component/gameButton';
 import PopUp from '../../component/popUp/quiz';
 import Trophy from '../../component/popUp/trophy';
+import { RestTwoTone } from '@ant-design/icons';
+
 
 const cardStyle = {
   width: '100%',
@@ -35,7 +38,33 @@ const tabStyle={
 
 //Chat Component
 const Chat = () => {
+
+  //search function 
+  //search options
+
+  const [searchState,searchStateChangers] = useSearch();
+
+  const [sd,setSd]=useState([]);
   
+  //Get Data from API
+  useEffect(()=>searchData,[])
+
+  const searchData=async ()=>
+  {
+    try{
+      const res=await searchStateChangers();
+      setSd(res.map((d)=>({value:d?.username})));
+      return options;
+    }catch(err){
+      console.log(err)
+    }
+  }
+
+  //search list setter
+
+  const options =[...sd];
+  
+  console.log(options)
   //drawer state opener
   const [open, setOpen] = useState(false);
   //profile state opener
@@ -48,7 +77,8 @@ const Chat = () => {
   const onClose = () => {
     setOpen(false);
   };
-
+  
+  
   //Navigation Tabs
   
   const items = [
@@ -101,9 +131,30 @@ const Chat = () => {
       setTrophyIsModalOpen(false);
     };
 
+
+  
   return (
      
   <div className="chat-container">
+
+    <div className='searchHeader' style={{width:'100%',height:'80px',backgroundColor:'lightgray',display:'flex',alignItems:'center'}}>
+    <AutoComplete
+    style={{
+      width: '50%',
+      height:'50px',
+      marginLeft:50,
+      fontSize:14
+    }}
+    allowClear
+    options={options}
+    placeholder="Type in username"
+    filterOption={(inputValue, option) =>
+      option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+    }
+  />
+      <h1 style={{position:'absolute',right:20,fontFamily:'sans-serif'}}>The Social</h1>
+    </div>
+    
     <Card hoverable style={cardStyle} styles={{ body: { padding: 0, overflow: 'hidden' } }}>
       <Flex style={{width:'100%'}} >
         {(!open&&!profileOpen)&&<img

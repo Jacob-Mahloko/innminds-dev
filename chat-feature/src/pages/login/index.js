@@ -34,25 +34,22 @@ const Login = () => {
       content: `Welcome, ${username}`,
     });
   };
-  const error = () => {
+  const error = (msg) => {
     messageApi.open({
       type: 'error',
-      content: 'Incorrect credentials',
+      content: msg,
     });
   };
   
-  const onFinish = (values) => {
-    const {username,password}=values;
-    
-    if(username==='jake'&&password=='pass'){
-      login(username);
-      console.log(success(username));
-      history('/Chat')
-      
-    }else{
-      error();
-      console.log(username,password,'help me');
+  const onFinish =async (values) => {
+    try{
+      await login(values);
+      history('/Chat');
+    }catch(err){
+      error(err);
     }
+    
+    console.log('updated state',status);
   };
   
   
@@ -100,7 +97,7 @@ const Login = () => {
     >
         <h1 className='login-form-main-heading'>Log in</h1>
       <Form.Item
-        name="username"
+        name="userNameOrEmailAddress"
         rules={[
           {
             required: true,
