@@ -12,7 +12,6 @@ const PopUp = ({ showModal,handleOk,handleCancel ,isModalOpen}) => {
     const [value, setValue] = useState(1);
 
     const onChange = (e) => {
-        console.log('radio checked', e.target.value);
         setValue(e.target.value);
       };
 

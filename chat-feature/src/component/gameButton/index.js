@@ -4,7 +4,6 @@ import { FloatButton } from 'antd';
 const GameButton = (props) => {
     
     const {showModal,trophyshowModal}=props;
-    console.log(showModal,'hello')
     return (
   <>
     <FloatButton.Group

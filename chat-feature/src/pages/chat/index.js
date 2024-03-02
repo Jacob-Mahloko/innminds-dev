@@ -47,24 +47,25 @@ const Chat = () => {
   const [sd,setSd]=useState([]);
   
   //Get Data from API
-  useEffect(()=>searchData,[])
+  useEffect(()=>{searchData()},[])
 
   const searchData=async ()=>
   {
     try{
       const res=await searchStateChangers();
-      setSd(res.map((d)=>({value:d?.username})));
-      return options;
+      setSd(()=>res.map((d)=>({value:d?.username})));
     }catch(err){
       console.log(err)
     }
   }
-
   //search list setter
 
   const options =[...sd];
   
-  console.log(options)
+  const OnSelect=(value)=>{
+    console.log(value)
+  }
+ 
   //drawer state opener
   const [open, setOpen] = useState(false);
   //profile state opener
@@ -95,7 +96,6 @@ const Chat = () => {
   const [ChatTabState,setTabState]=useState(true);
 
   const onChange = (key) => {
-    console.log(key)
     if(key==='1'){
       setTabState(()=>true);
     }else if(key='2'){
@@ -130,8 +130,6 @@ const Chat = () => {
     const trophyhandleCancel = () => {
       setTrophyIsModalOpen(false);
     };
-
-
   
   return (
      
@@ -139,16 +137,18 @@ const Chat = () => {
 
     <div className='searchHeader' style={{width:'100%',height:'80px',backgroundColor:'lightgray',display:'flex',alignItems:'center'}}>
     <AutoComplete
-    style={{
-      width: '50%',
+      popupMatchSelectWidth={500}
+      style={{
+        width: '50%',
       height:'50px',
       marginLeft:50,
       fontSize:14
-    }}
-    allowClear
-    options={options}
-    placeholder="Type in username"
-    filterOption={(inputValue, option) =>
+      }}
+      allowClear
+      options={options}
+      onSelect={OnSelect}
+      placeholder="Type in username"
+      filterOption={(inputValue, option) =>
       option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
     }
   />
